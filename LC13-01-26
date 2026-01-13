@@ -1,0 +1,47 @@
+Solution 1: Binary Search
+According to the problem, we need to find a horizontal line such that the total area of squares above the line equals the total area of squares below the line. Since as the 
+ coordinate increases, the area below the line increases and the area above the line decreases, we can use binary search to find the 
+ coordinate of this horizontal line.
+
+We define the left boundary of the binary search as 
+, and the right boundary as 
+, which is the highest point of all squares. Then we calculate the midpoint 
+ and calculate the area below this horizontal line. If this area is greater than or equal to half of the total area, it means we need to move the right boundary 
+ downward; otherwise, we move the left boundary 
+ upward. We repeat this process until the difference between the left and right boundaries is less than a very small value (e.g., 
+).
+
+The time complexity is 
+, where 
+ is the number of squares, 
+, and 
+. The space complexity is 
+.
+
+
+Python3
+Java
+C++
+Go
+TypeScript
+Rust
+
+class Solution:
+    def separateSquares(self, squares: List[List[int]]) -> float:
+        def check(y1: float) -> bool:
+            t = 0
+            for _, y, l in squares:
+                if y < y1:
+                    t += l * min(y1 - y, l)
+            return t >= s / 2
+
+        s = sum(a[2] * a[2] for a in squares)
+        l, r = 0, max(a[1] + a[2] for a in squares)
+        eps = 1e-5
+        while r - l > eps:
+            mid = (l + r) / 2
+            if check(mid):
+                r = mid
+            else:
+                l = mid
+        return r
